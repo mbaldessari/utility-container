@@ -1,0 +1,50 @@
+name: "Container build multi-arch"
+on: [push, pull_request]
+
+jobs:
+  x86-container:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build the Docker image with Buildah arm64
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: utility-container-test
+        tags: latest ${{ github.sha }}
+        containerfiles: |
+          ./Containerfile
+
+    - name: Run Container tests
+      run: make test
+
+    - name: Clone MCG and test a target via container
+      run: |
+        git clone --depth 1 https://github.com/hybrid-cloud-patterns/multicloud-gitops
+        cd multicloud-gitops
+        export PATTERN_UTILITY_CONTAINER=localhost/utility-container-test:latest
+        ./pattern.sh make validate-schema
+ 
+  aarch64-container:
+    runs-on: [self-hosted, linux, ARM64]
+ 
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build the Docker image with Buildah arm64
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: utility-container-test
+        tags: latest ${{ github.sha }}
+        containerfiles: |
+          ./Containerfile
+ 
+    - name: Run Container tests
+      run: make test
+
+    - name: Clone MCG and test a target via container
+      run: |
+        git clone --depth 1 https://github.com/hybrid-cloud-patterns/multicloud-gitops
+        cd multicloud-gitops
+        export PATTERN_UTILITY_CONTAINER=localhost/utility-container-test:latest
+        ./pattern.sh make validate-schema
