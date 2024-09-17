@@ -21,7 +21,6 @@ LABEL org.opencontainers.image.title="${TITLE}" \
       license="${LICENSE}" \
       description="${DESCRIPTION}"
 
-ARG COLLECTIONS_TO_REMOVE="fortinet cisco dellemc f5networks junipernetworks mellanox netapp"
 ARG DNF_TO_REMOVE="dejavu-sans-fonts langpacks-core-font-en langpacks-core-en langpacks-en"
 ARG RPM_TO_FORCEFULLY_REMOVE="cracklib-dicts"
 # Versions
@@ -117,19 +116,10 @@ COPY requirements.txt /tmp/requirements.txt
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
 ansible-galaxy collection install --collections-path /usr/share/ansible/collections -r /tmp/requirements.yml && \
-rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/ansible_collections/$COLLECTIONS_TO_REMOVE && \
-curl -L -O https://raw.githubusercontent.com/clumio-code/azure-sdk-trim/main/azure_sdk_trim/azure_sdk_trim.py && \
-python3 azure_sdk_trim.py && rm azure_sdk_trim.py && pip uninstall -y humanize && \
 if [ -n "$EXTRARPMS" ]; then microdnf remove -y $EXTRARPMS; fi && \
 mkdir -p /pattern/.ansible/tmp /pattern-home/.ansible/tmp && \
 find /pattern/.ansible -type d -exec chmod 770 "{}" \; && \
 find /pattern-home/.ansible -type d -exec chmod 770 "{}" \;
-
-
-# Adding python scripts to start, stop and retrieve status of hostedcluster instnances
-ADD https://raw.githubusercontent.com/validatedpatterns/utilities/main/aws-tools/start-instances.py \
-    https://raw.githubusercontent.com/validatedpatterns/utilities/main/aws-tools/stop-instances.py \
-    https://raw.githubusercontent.com/validatedpatterns/utilities/main/aws-tools/status-instances.py /usr/local/bin/
 
 COPY default-cmd.sh /usr/local/bin
 WORKDIR /pattern

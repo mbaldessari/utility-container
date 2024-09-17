@@ -105,11 +105,6 @@ versions: ## Print all the versions of software in the locally-built container
 		echo -n \"|pytest pip \"; pip show pytest | grep ^Version | cut -f2 -d\  |tr -d '\n'; echo \" \"; \
 		echo -n \"|ansible pip \"; ansible --version -o json | grep core | cut -f3 -d\ | tr -d '\n]';  echo \" \"; \
 		echo -n \"|kubernetes pip \"; pip show kubernetes |grep ^Version: | cut -f2 -d\ | tr -d '\n';  echo \" \"; \
-		echo -n \"|boto3 pip \"; pip show boto3 | grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
-		echo -n \"|botocore pip \"; pip show botocore | grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
-		echo -n \"|awscli pip \"; pip show awscli | grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
-		echo -n \"|azure-cli pip \"; pip show azure-cli | grep ^Version: | cut -f2 -d\ | tr -d '\n';  echo \" \"; \
-		echo -n \"|gcloud pip \"; pip show gcloud| grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
 		echo -n \"|awxkit pip \"; pip show awxkit| grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
 		echo -n \"|jmespath pip \"; pip show jmespath| grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
 		echo -n \"|ansible-runner pip \"; pip show ansible-runner| grep ^Version: | cut -f2 -d\ |tr -d '\n';  echo \" \"; \
